@@ -1,0 +1,8 @@
+### Test de l'endpoint webhook
+POST https://endpoint-vercel.vercel.app/api/webhook
+Content-Type: application/json
+
+{
+    "test": "Hello from REST Client",
+    "timestamp": "2024-01-12"
+}
