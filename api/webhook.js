@@ -1,39 +1,58 @@
 export default function handler(req, res) {
-    if (req.method === 'POST') {
-      try {
-        // Log les données reçues
-        console.log('Webhook reçu:', req.body);
-        
-        // Vérification basique de la signature (à implémenter avec votre clé secrète TikTok)
-        const signature = req.headers['x-tiktok-signature'];
-        
-        // TODO: Ajouter la vérification de la signature
-        // if (!validateSignature(signature, req.body)) {
-        //   return res.status(403).json({ error: 'Signature invalide' });
-        // }
+  // Log de démarrage
+  console.log('=== Démarrage du webhook ===');
   
-        // Traitement des données
-        const webhookData = req.body;
-        
-        // Répondre à TikTok
-        return res.status(200).json({
-          success: true,
-          message: 'Webhook reçu et traité',
-          timestamp: new Date().toISOString()
-        });
-  
-      } catch (error) {
-        console.error('Erreur webhook:', error);
-        return res.status(500).json({ 
-          error: 'Erreur interne du serveur',
-          message: error.message 
+  // Récupération et log des credentials
+  const clientId = process.env.TIKTOK_CLIENT_ID;
+  const clientSecret = process.env.TIKTOK_CLIENT_SECRET;
+  console.log('Vérification des credentials:', {
+    hasClientId: !!clientId,
+    hasClientSecret: !!clientSecret
+  });
+
+  if (req.method === 'POST') {
+    try {
+      // Log détaillé de la requête
+      console.log('Requête reçue:', {
+        method: req.method,
+        headers: req.headers,
+        body: req.body,
+        timestamp: new Date().toISOString()
+      });
+
+      // Vérification des credentials
+      if (!clientId || !clientSecret) {
+        console.error('❌ Credentials manquants');
+        return res.status(500).json({
+          success: false,
+          message: 'Configuration incorrecte'
         });
       }
+
+      // Log de succès
+      console.log('✅ Webhook traité avec succès');
+
+      return res.status(200).json({
+        success: true,
+        message: 'Webhook reçu et traité',
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      // Log d'erreur
+      console.error('❌ Erreur:', error);
+      return res.status(500).json({
+        success: false,
+        message: error.message
+      });
     }
-  
-    // Pour toute autre méthode que POST
-    return res.status(405).json({ 
-      error: 'Méthode non autorisée',
-      message: 'Seules les requêtes POST sont acceptées' 
-    });
   }
+
+  // Log pour méthode non autorisée
+  console.log('❌ Méthode non autorisée:', req.method);
+  return res.status(405).json({
+    success: false,
+    error: 'Méthode non autorisée',
+    message: 'Seules les requêtes POST sont acceptées'
+  });
+}
