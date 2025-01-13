@@ -57,3 +57,40 @@ Content-Type: application/json
         "duration": "00:02:30"
     }
 }
+
+### Test données incomplètes
+POST https://endpoint-vercel.vercel.app/api/webhook
+Content-Type: application/json
+
+{
+    "event_type": "video_analysis"
+}
+
+### Test format invalide
+POST https://endpoint-vercel.vercel.app/api/webhook
+Content-Type: application/json
+
+{
+    "event_type": "video_analysis",
+    "timestamp": "2024-01-13T11:00:00Z",
+    "data": {
+        "video_id": 12345,
+        "metrics": {
+            "views": "1500"
+        }
+    }
+}
+
+### Test nouveau type d'événement
+POST https://endpoint-vercel.vercel.app/api/webhook
+Content-Type: application/json
+
+{
+    "event_type": "user_engagement",
+    "timestamp": "2024-01-13T11:00:00Z",
+    "data": {
+        "user_id": "user123",
+        "action": "follow",
+        "target_id": "creator456"
+    }
+}
