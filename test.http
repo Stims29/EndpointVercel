@@ -1,20 +1,10 @@
-### Test du Webhook
+### Test Webhook
 POST https://endpoint-vercel.vercel.app/api/webhook
 Content-Type: application/json
 
 {
-    "event_type": "video_data",
-    "timestamp": "2024-01-12T10:30:00Z",
-    "data": {
-        "video_id": "test123",
-        "user_id": "user123",
-        "metrics": {
-            "views": 1000,
-            "likes": 150,
-            "shares": 25,
-            "comments": 45
-        },
-        "themes": ["cuisine", "recettes"]
-    },
-    "test": true
+    "test": "test webhook"
 }
+
+### Test Auth
+GET https://endpoint-vercel.vercel.app/api/auth
