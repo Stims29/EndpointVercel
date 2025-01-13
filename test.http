@@ -1,10 +1,39 @@
-### Test Webhook
+### Test Auth Endpoint
+GET https://endpoint-vercel.vercel.app/api/auth
+
+### Test Webhook (existant)
 POST https://endpoint-vercel.vercel.app/api/webhook
 Content-Type: application/json
 
 {
-    "test": "test webhook"
+    "test": "test webhook",
+    "timestamp": "2024-01-12T15:00:00Z"
 }
 
-### Test Auth
-GET https://endpoint-vercel.vercel.app/api/auth
+### Test Webhook avec données complètes
+POST https://endpoint-vercel.vercel.app/api/webhook
+Content-Type: application/json
+
+{
+    "event_type": "video_analysis",
+    "timestamp": "2024-01-13T11:00:00Z",
+    "data": {
+        "video_id": "test123",
+        "metrics": {
+            "views": 1500,
+            "likes": 200,
+            "comments": 45,
+            "shares": 30
+        },
+        "themes": ["cuisine", "recettes", "healthy"],
+        "duration": "00:02:30"
+    }
+}
+
+### Test Webhook avec données invalides
+POST https://endpoint-vercel.vercel.app/api/webhook
+Content-Type: application/json
+
+{
+    "invalid_data": true
+}
