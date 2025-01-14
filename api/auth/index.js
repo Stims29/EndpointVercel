@@ -2,27 +2,34 @@ export default async function handler(req, res) {
   console.log('=== Démarrage auth handler ===');
   console.log('Méthode:', req.method);
   
-  // Gestion de la vérification du webhook
+  // Si c'est une requête POST (webhook)
   if (req.method === 'POST') {
-      console.log('Corps de la requête:', req.body);
-      
-      // Vérification du webhook TikTok
-      if (req.body && req.body.test_event) {
-          console.log('✅ Test event reçu de TikTok');
+      try {
+          // Parse le corps de la requête si nécessaire
+          const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+          console.log('Corps de la requête POST:', body);
+          
+          // Vérification du webhook TikTok - retourne toujours 200 pour la vérification
           return res.status(200).json({
               message: "Webhook verification successful"
+          });
+      } catch (error) {
+          console.error('❌ Erreur de traitement webhook:', error);
+          return res.status(400).json({
+              success: false,
+              message: error.message
           });
       }
   }
   
-  // Gestion de l'authentification OAuth
+  // Si c'est une requête GET (OAuth)
   if (req.method === 'GET') {
       // Récupération des credentials
       const clientId = process.env.TIKTOK_CLIENT_ID;
       const clientSecret = process.env.TIKTOK_CLIENT_SECRET;
       
       try {
-          // Log de la requête complète pour debug
+          // Log de la requête pour debug
           console.log('Query params reçus:', req.query);
           console.log('Headers:', req.headers);
           
